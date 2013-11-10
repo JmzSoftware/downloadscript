@@ -72,7 +72,7 @@ if (!$row) {
 						{
 							echo "Invalid File or File Not Specified";
 							exit(0);
-				}
+				                }
 
 function fetch($content,$start,$end) {
 	if($content && $start && $end) {
