@@ -21,15 +21,23 @@
 require_once 'config.php';
 require_once 'markdown.php';
 
-$currentFolder = NULL;
-$currentDeveloper = NULL;
+$users=array();
+$g=scandir($baseDir);
+foreach($g as $x)
+{
+    if(is_dir($x))$users[$x]=scandir($x);
+    else $users[]=$x;
+}
 
-if(isset($_GET['developer'])) {
-$currentDeveloper = $_GET['developer'];
-if(!in_array($currentDeveloper, $users))
+$currentFolder = NULL;
+$currentDevice = NULL;
+
+if(isset($_GET['device'])) {
+$currentDevice = $_GET['device'];
+if(!in_array($currentDevice, $users))
     die("Access denied.");
 } else {
-$currentDeveloper = false;
+$currentDevice = false;
 }
 if(isset($_GET['folder'])) {
 $currentFolder = $_GET['folder'];
@@ -37,6 +45,14 @@ if(strpos($currentFolder, '..') !== false)
     die("Access denied.");
 $totalPath = null;
 }
+
+if(isset($_GET['folder2'])) {
+$currentFolder2 = $_GET['folder2'];
+if(strpos($currentFolder2, '..') !== false)
+    die("Access denied.");
+$totalPath = null;
+}
+
 
 $fileMTimes = array();
 
@@ -75,8 +91,8 @@ function sizePretty($bytes) {
     return number_format($bytes) . " bytes";
 }
 
-if ($currentDeveloper) {
-    $devPath = $baseDir."/".$currentDeveloper;
+if ($currentDevice) {
+    $devPath = $baseDir."/".$currentDevice;
     $subFolders = getAllInFolder($devPath, FILE_FILTER_DIRS);
     sort($subFolders);
 
@@ -91,6 +107,7 @@ if ($currentDeveloper) {
         $handle = opendir($folderPath);
 
     }
+ 
 }
 if(!empty($files)) {
 sort($files);
@@ -123,19 +140,21 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div id='links' class='block'>
         <h2>Select a device</h2>
         <?php foreach($users as $user): ?>
-        <a href='?developer=<?= $user ?>'><?= $user ?></a>
+        <?php if((string)$user != "Array") { ?>
+        <a href='?device=<?= $user ?>'><?= $user ?></a>
+        <?php } ?>
         <?php endforeach ?>
         <div style='clear: both'></div>
     </div>
 
     <div id='page'>
-        <?php if($currentDeveloper): ?>
+        <?php if($currentDevice): ?>
             <div id='sidebar'>
                 <div class='block'>
-                    <h2><?= htmlspecialchars($currentDeveloper) ?></h2>
+                    <h2><?= htmlspecialchars($currentDevice) ?></h2>
                     <ul>
                     <?php foreach($subFolders as $folder): ?>
-                        <li class='<?= $currentFolder == $folder ? "active" : "" ?>'><a href='?developer=<?= rawurlencode($currentDeveloper) ?>&amp;folder=<?= rawurlencode($folder) ?>'><?= $folder ?></a><li>
+                        <li class='<?= $currentFolder == $folder ? "active" : "" ?>'><a href='?device=<?= rawurlencode($currentDevice) ?>&amp;folder=<?= rawurlencode($folder) ?>'><?= $folder ?></a><li>
                     <?php endforeach ?>
                     </ul>
                 </div>
@@ -180,6 +199,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                     </div>
 
             <?php endif ?>
+
         <?php else: ?>
             <div id='content'>
                 Click a link at the top to view each device's files.
