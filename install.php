@@ -30,9 +30,9 @@ $yourls = "true";
 } else {
 $yourls = "false";
 }
-$yours_api = $_POST['yourlsapi'];
-$yours_user = $_POST['yourlsuser'];
-$yours_pass = $_POST['yourlspass'];
+$yourls_api = $_POST['yourlsapi'];
+$yourls_user = $_POST['yourlsuser'];
+$yourls_pass = $_POST['yourlspass'];
 $adsense = $_POST['adsense'];
 $sitename = $_POST['title'];
 $hostname = $_POST['host'];
