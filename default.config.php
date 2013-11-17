@@ -34,16 +34,16 @@ $globalBlacklist = array(
 );
 
 $host = 'localhost';
-$database = ''; // MySQL Database Name
-$user = ''; // MySQL username
-$password = ''; // MySQL password
+$database = 'databasename'; // MySQL Database Name
+$user = 'mysqlusername'; // MySQL username
+$password = 'mysqlpassword'; // MySQL password
 $yourls = false; // Use yourls
-$yourls_url = ''; // Path to Yourls API without yourls-api.php
-$username = ''; // yourls username
-$password2 = ''; // yourls password
-$adsense = ''; // Adsense publisher ID.  Starts with ca-pub-
-$siteTitle = ''; // Title of site to show in window
-$twitusername = ''; // Twitter username without @
+$yourls_url = 'yoursurl'; // Path to Yourls API without yourls-api.php
+$username = 'yourlsusername'; // yourls username
+$password2 = 'yourlspassword'; // yourls password
+$adsense = 'adsenseid'; // Adsense publisher ID.  Starts with ca-pub-
+$siteTitle = 'titleofsite'; // Title of site to show in window
+$twitusername = 'twitterusername'; // Twitter username without @
 
 $link = mysql_connect($host, $user, $password) or die("Could not connect: " . mysql_error());
 mysql_select_db($database) or die(mysql_error());
