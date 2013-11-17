@@ -8,13 +8,33 @@
     Username: <input type="text" name="user" value="root">
     <br>Password: <input type="password" name="password">
     <br>Host: <input type="text" name="host" value="localhost">
-    <br>Database Name <input type="text" name="database" value="SickleCMS">
+    <br>Database Name <input type="text" name="database">
+    <br><input type="checkbox" name="yourls" value="ON">Use YOURLS?
+    <br>Yourls API location: <input type="text" name="yourlsapi">
+    <br>Yourls Username: <input type="text" name="yourlsuser">
+    <br>Yourls Password: <input type="text" name="yourlspass">
+    <br>Adsense Pub ID: <input type="text" name="adsense">
+    <br>Site Title: <input type="text" name="title">
+    <br>Domain without www: <input type="text" name="domain">
+    <br>Twitter Username: <input type="text" name="twit">
     <br><input type="submit" value="Start Install!">
   </form>
 </body>
 </html>
 
 <?php
+$domain = $_POST['domain'];
+$twitter = $_POST['twit'];
+if(isset($_POST['yourls'])) {
+$yourls = "true";
+} else {
+$yourls = "false";
+}
+$yours_api = $_POST['yourlsapi'];
+$yours_user = $_POST['yourlsuser'];
+$yours_pass = $_POST['yourlspass'];
+$adsense = $_POST['adsense'];
+$sitename = $_POST['title'];
 $hostname = $_POST['host'];
 $username = $_POST['user'];
 $password = $_POST['password'];
@@ -83,6 +103,40 @@ file_put_contents($path_to_file,$file_contents);
 $file_contents = file_get_contents($path_to_file);
 $file_contents = str_replace("mysqlpassword", $password,$file_contents);
 file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("twitterusername", $twitter,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("false", $yourls,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("yourlsurl", $yourls_api,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("yourlsuser", $yourls_user,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("yourlspass", $yourls_pass,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("adsenseid", $adsense,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("titleofsite", $sitename,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+$file_contents = file_get_contents($path_to_file);
+$file_contents = str_replace("domain.com", $domain,$file_contents);
+file_put_contents($path_to_file,$file_contents);
+
+copy('default.config.php', 'config.php');
 
 }
 ?>
