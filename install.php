@@ -39,12 +39,14 @@ $hostname = $_POST['host'];
 $username = $_POST['user'];
 $password = $_POST['password'];
 $database = $_POST['database'];
-
+if(isset($_POST['password']))
+{
 if ($password == "")
 {
   echo "<br>Password must not be empty!";
 }
 
+}
 if ($username != "" && $hostname != "" && $password != "") {
 $con = mysql_connect($hostname,$username,$password);
 if (!$con)

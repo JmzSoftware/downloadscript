@@ -17,62 +17,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once 'config.php';
 require_once 'markdown.php';
-
-$users=array();
-$g=scandir($baseDir);
-foreach($g as $x)
-{
-    if(is_dir($x))$users[$x]=scandir($x);
-    else $users[]=$x;
+$users = array();
+$g     = scandir($baseDir);
+foreach ($g as $x) {
+    if (is_dir($x))
+        $users[$x] = scandir($x);
+    else
+        $users[] = $x;
 }
-
 $currentFolder = NULL;
 $currentDevice = NULL;
-
-if(isset($_GET['device'])) {
-$currentDevice = $_GET['device'];
-if(!in_array($currentDevice, $users))
-    die("Access denied.");
+if (isset($_GET['device'])) {
+    $currentDevice = $_GET['device'];
+    if (!in_array($currentDevice, $users))
+        die("Access denied.");
 } else {
-$currentDevice = false;
+    $currentDevice = false;
 }
-if(isset($_GET['folder'])) {
-$currentFolder = $_GET['folder'];
-if(strpos($currentFolder, '..') !== false)
-    die("Access denied.");
-$totalPath = null;
+if (isset($_GET['folder'])) {
+    $currentFolder = $_GET['folder'];
+    if (strpos($currentFolder, '..') !== false)
+        die("Access denied.");
+    $totalPath = null;
 }
-
-if(isset($_GET['folder2'])) {
-$currentFolder2 = $_GET['folder2'];
-if(strpos($currentFolder2, '..') !== false)
-    die("Access denied.");
-$totalPath = null;
+if (isset($_GET['folder2'])) {
+    $currentFolder2 = $_GET['folder2'];
+    if (strpos($currentFolder2, '..') !== false)
+        die("Access denied.");
+    $totalPath = null;
 }
-
-
 $fileMTimes = array();
-
 define("FILE_FILTER_FILES", 0x1);
 define("FILE_FILTER_DIRS", 0x2);
 define("FILE_FILTER_ALL", FILE_FILTER_DIRS | FILE_FILTER_FILES);
-function getAllInFolder($folder, $filter=FILE_FILTER_ALL) {
+function getAllInFolder($folder, $filter = FILE_FILTER_ALL)
+{
     global $globalBlacklist;
-    $handle = opendir($folder);
+    $handle  = opendir($folder);
     $entries = array();
     if ($handle) {
         while (false !== ($entry = readdir($handle))) {
-            $entryPath = $folder."/".$entry;
+            $entryPath = $folder . "/" . $entry;
             if ($entry[0] == '.')
                 continue;
             if (in_array($entry, $globalBlacklist))
                 continue;
-
-            if ((is_dir($entryPath) && $filter & FILE_FILTER_DIRS) ||
-                (!is_dir($entryPath) && $filter & FILE_FILTER_FILES)) {
+            if ((is_dir($entryPath) && $filter & FILE_FILTER_DIRS) || (!is_dir($entryPath) && $filter & FILE_FILTER_FILES)) {
                 $entries[] = $entry;
             }
         }
@@ -80,37 +72,32 @@ function getAllInFolder($folder, $filter=FILE_FILTER_ALL) {
     }
     return $entries;
 }
-
-function sizePretty($bytes) {
-    if($bytes >= GB)
-        return number_format($bytes/GB) . " GB";
-    else if($bytes >= MB)
-        return number_format($bytes/MB) . " MB";
-    else if($bytes >= KB)
-        return number_format($bytes/KB) . " KB";
+function sizePretty($bytes)
+{
+    if ($bytes >= GB)
+        return number_format($bytes / GB) . " GB";
+    else if ($bytes >= MB)
+        return number_format($bytes / MB) . " MB";
+    else if ($bytes >= KB)
+        return number_format($bytes / KB) . " KB";
     return number_format($bytes) . " bytes";
 }
-
 if ($currentDevice) {
-    $devPath = $baseDir."/".$currentDevice;
+    $devPath    = $baseDir . "/" . $currentDevice;
     $subFolders = getAllInFolder($devPath, FILE_FILTER_DIRS);
     sort($subFolders);
-
     if (!$currentFolder) {
         $currentFolder = '.';
     }
-
     if ($currentFolder) {
-        $folderPath = $devPath."/".$currentFolder;
-        $totalPath = $folderPath;
-        $files = getAllInFolder($folderPath, FILE_FILTER_FILES);
-        $handle = opendir($folderPath);
-
+        $folderPath = $devPath . "/" . $currentFolder;
+        $totalPath  = $folderPath;
+        $files      = getAllInFolder($folderPath, FILE_FILTER_FILES);
+        $handle     = opendir($folderPath);
     }
- 
 }
-if(!empty($files)) {
-sort($files);
+if (!empty($files)) {
+    sort($files);
 }
 ?>
 <!DOCTYPE html>
@@ -121,8 +108,11 @@ sort($files);
 </head>
 <body>
 <center>
+<?php
+if ($useAdsense == true) {
+?>
 <script type="text/javascript"><!--
-google_ad_client = "<?php echo $adsense ?>";
+google_ad_client = "<?php echo $adsense; ?>";
 /* Top Bar */
 google_ad_slot = "3775827379";
 google_ad_width = 728;
@@ -132,39 +122,62 @@ google_ad_height = 90;
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
+<?php
+}
+?>
 
     <div id='header'>
-        <a href="http://<?php echo $siteName ?>" ><img src="/images/header.jpg" width="900" height="182" /></a>
+        <a href="http://<?php
+echo $siteName;
+?>" ><img src="/images/header.jpg" width="900" height="182" /></a>
     </div>
     <br>
     <div id='links' class='block'>
         <h2>Select a device</h2>
-        <?php foreach($users as $user): ?>
-        <?php if((string)$user != "Array") { ?>
+        <?php
+foreach ($users as $user):
+?>
+        <?php
+    if ((string) $user != "Array") {
+?>
         <a href='?device=<?= $user ?>'><?= $user ?></a>
-        <?php } ?>
-        <?php endforeach ?>
+        <?php
+    }
+?>
+        <?php
+endforeach;
+?>
         <div style='clear: both'></div>
     </div>
 
     <div id='page'>
-        <?php if($currentDevice): ?>
+        <?php
+if ($currentDevice):
+?>
             <div id='sidebar'>
                 <div class='block'>
                     <h2><?= htmlspecialchars($currentDevice) ?></h2>
                     <ul>
-                    <?php foreach($subFolders as $folder): ?>
+                    <?php
+    foreach ($subFolders as $folder):
+?>
                         <li class='<?= $currentFolder == $folder ? "active" : "" ?>'><a href='?device=<?= rawurlencode($currentDevice) ?>&amp;folder=<?= rawurlencode($folder) ?>'><?= $folder ?></a><li>
-                    <?php endforeach ?>
+                    <?php
+    endforeach;
+?>
                     </ul>
                 </div>
             </div>
 
-            <?php if($currentFolder): ?>
+            <?php
+    if ($currentFolder):
+?>
                 <div style='float: left; margin-left: 10px; width: 668px'>
                     <div class='block'>
                         <h2><?= htmlspecialchars($currentFolder) ?></h2>
-                        <?php if (count($files) > 0): ?>
+                        <?php
+        if (count($files) > 0):
+?>
                             <table>
                                     <tr>
 					<th align='left'>File</th>
@@ -172,17 +185,18 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                                         <th align='left' width='80px'>Size</th>
                                         <th align='right' width='80px'>Downloads</th>
                                     </tr>
-                                    <?php foreach($files as $file): ?>
+                                    <?php
+            foreach ($files as $file):
+?>
                                         <?php
-                                        $rp = realpath($totalPath . "/" . $file);
-                                        $resolvedPath = substr($rp, strpos($rp, "/files")+strlen("/files/"));
-					$filePath = $baseDir . "/" . $resolvedPath;
-					$query = sprintf("SELECT * FROM md5sums WHERE filename= '$resolvedPath'",
-                                        mysql_real_escape_string($file));
-                                        $result = mysql_query($query) or die(mysql_error());
-                                        $row = mysql_fetch_array($result);
-                                        $filedown = $row['downloads'];
-                                        ?>
+                $rp           = realpath($totalPath . "/" . $file);
+                $resolvedPath = substr($rp, strpos($rp, "/files") + strlen("/files/"));
+                $filePath     = $baseDir . "/" . $resolvedPath;
+                $query        = sprintf("SELECT * FROM md5sums WHERE filename= '$resolvedPath'", mysql_real_escape_string($file));
+                $result = mysql_query($query) or die(mysql_error());
+                $row      = mysql_fetch_array($result);
+                $filedown = $row['downloads'];
+?>
                                         <tr class='download'>
                                             <td>
                                                 <div class='name'><a style='display: block' href='getdownload.php?file=<?= $resolvedPath ?>'><?= $file ?><br></a></div>
@@ -191,20 +205,32 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                                                 <td><?= sizePretty(filesize($filePath)) ?></td>
 						<td><?= $filedown ?></td>
                                         </tr>
-                                    <?php endforeach ?>
+                                    <?php
+            endforeach;
+?>
                             </table>
-                        <?php else: ?>
+                        <?php
+        else:
+?>
                             No files here.
-                        <?php endif ?>
+                        <?php
+        endif;
+?>
                     </div>
 
-            <?php endif ?>
+            <?php
+    endif;
+?>
 
-        <?php else: ?>
+        <?php
+else:
+?>
             <div id='content'>
                 Click a link at the top to view each device's files.
             </div>
-        <?php endif ?>
+        <?php
+endif;
+?>
         <div style='clear: both'></div>
     </div>
 </a></div>
@@ -212,15 +238,18 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br>
 <?php
 $result = mysql_query('SELECT SUM(downloads) AS value_sum FROM md5sums');
-$row = mysql_fetch_assoc($result);
-$sum = $row['value_sum'];
+$row    = mysql_fetch_assoc($result);
+$sum    = $row['value_sum'];
 echo "Total Downloads: " . $sum;
 mysql_close();
 ?>
 <br>
 <br>
+<?php
+if ($yourls == true) {
+?>
 <script type="text/javascript"><!--
-google_ad_client = "<?php echo $adsense ?>";
+google_ad_client = "<?php echo $adsense; ?>";
 /* Top Bar */
 google_ad_slot = "3775827379";
 google_ad_width = 728;
@@ -230,6 +259,9 @@ google_ad_height = 90;
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
+<?php
+}
+?>
 <br>
 <center>
 </body>

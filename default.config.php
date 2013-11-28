@@ -26,23 +26,24 @@ define("GB", ONE_K * MB);
 define("TB", ONE_K * GB);
 
 // Site
-$siteName = "domain.com"; // Without www
-$baseDir = "files"; // This can be changed.  This is where you will put the files to download
+$siteName        = "domain.com"; // Without www
+$baseDir         = "files"; // This can be changed.  This is where you will put the files to download
 $globalBlacklist = array(
     "images",
-    "private",
+    "private"
 );
 
-$host = 'localhost';
-$database = 'databasename'; // MySQL Database Name
-$user = 'mysqlusername'; // MySQL username
-$password = 'mysqlpassword'; // MySQL password
-$yourls = false; // Use yourls
-$yourls_url = 'yourlsurl'; // Path to Yourls API without yourls-api.php
-$username = 'yourlsuser'; // yourls username
-$password2 = 'yourlspass'; // yourls password
-$adsense = 'adsenseid'; // Adsense publisher ID.  Starts with ca-pub-
-$siteTitle = 'titleofsite'; // Title of site to show in window
+$host         = 'localhost';
+$database     = 'databasename'; // MySQL Database Name
+$user         = 'mysqlusername'; // MySQL username
+$password     = 'mysqlpassword'; // MySQL password
+$yourls       = false; // Use yourls
+$yourls_url   = 'yourlsurl'; // Path to Yourls API without yourls-api.php
+$username     = 'yourlsuser'; // yourls username
+$password2    = 'yourlspass'; // yourls password
+$useAdsense   = false; // Use Adsense
+$adsense      = 'adsenseid'; // Adsense publisher ID.  Starts with ca-pub-
+$siteTitle    = 'titleofsite'; // Title of site to show in window
 $twitusername = 'twitterusername'; // Twitter username without @
 
 $link = mysql_connect($host, $user, $password) or die("Could not connect: " . mysql_error());
