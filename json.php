@@ -83,9 +83,8 @@ die;
 $return_arr = array();
 
 if($device == ""){
-
+$dev = str_replace(" ", "%20", $dev);
 $url = "http://androidfiles.org/?developer=".$dev;
-
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL,"$url");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -117,8 +116,8 @@ $res = strstr($gurl, "<div id='sidebar'>");
 				if ($device == '')
 				{
 				  if($i == 1){
-				  $url = "http://androidfiles.org/?developer=".$dev;
-
+				  $url = "http://androidfiles.org/?developer=". $dev;
+echo $url;
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL,"$url");
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -208,7 +207,8 @@ $res = strstr($gurl, "<div style='float: left; margin-left: 10px; width: 668px'>
 }
 
 }else{
-
+$dev = str_replace(" ", "%20", $dev);
+$device = str_replace(" ", "%20", $device);
 $url = "http://androidfiles.org/?developer=".$dev."&folder=".$device;
 
 $ch = curl_init();
