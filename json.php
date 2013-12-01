@@ -1,6 +1,10 @@
 <?php
 require_once 'config.php';
 
+if(isset($_GET['basedir'])) {
+echo $baseDir;
+}
+
 if(isset($_GET['md5'])) {
 $md5 = $_GET['md5'];
 $md5stripped = substr($md5, 6);
@@ -9,7 +13,7 @@ mysql_real_escape_string($file));
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 if (!$row['md5']) {
-                $md5 = md5_file($md5stripped);
+                $md5 = md5_file($md5);
                 $sqlread = mysql_query("INSERT INTO md5sums (filename,md5) VALUES(\"$md5stripped\",\"$md5\")") or die(mysql_error());
                 echo $md5;
         }else{
