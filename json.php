@@ -13,6 +13,22 @@ if(isset($_GET['basedir'])) {
 echo $baseDir;
 }
 
+if(isset($_GET['update'])) {
+$romname = $_GET['update'];
+$json = array();
+mysql_select_db("romupdate");
+$q=mysql_query("SELECT * FROM romupdate WHERE romname ='$romname' ORDER BY romver DESC");
+$dataArray = array();
+while($r = mysql_fetch_array($q, MYSQL_ASSOC))
+{
+    $dataArray[] = $r;
+    $json['dev_info'] = $dataArray;
+}
+
+print json_encode($json);
+
+mysql_close();
+}
 if(isset($_GET['md5'])) {
 $md5 = $_GET['md5'];
 $query = sprintf("SELECT * FROM md5sums WHERE filename='$md5'",
@@ -67,8 +83,16 @@ if ($handle = opendir($baseDir . "/" . $dev . "/" . $device)) {
         if($file == "." or $file == ".." || $file == ".htaccess" || $file == ".users"){
         } else {
                 $row_array['filename'] = $file;
-                $filesize = filesize($baseDir . "/" . $dev . "/" . "$device" . "/" . $file);
-                $row_array['filesize'] = formatBytes($filesize);
+                if(is_file($baseDir . "/" . $dev . "/" . "$device" . "/" . $file)) {
+                	$filesize = filesize($baseDir . "/" . $dev . "/" . "$device" . "/" . $file);
+                	$row_array['filesize'] = formatBytes($filesize);
+                	$path = "$dev" .  "/" . "$device" . "/" . "$file";
+                	$query = sprintf("SELECT * FROM md5sums WHERE filename= '$path'",
+                	mysql_real_escape_string($downloads));
+                	$result = mysql_query($query) or die(mysql_error());
+                	$row = mysql_fetch_array($result);
+                	$row_array['downloads'] = $row['downloads'];
+                }
                 array_push($return_arr,$row_array);
         }
     }
@@ -95,8 +119,16 @@ if ($handle = opendir($baseDir . "/" . $dev)) {
 	if($file == "." or $file == ".." || $file == ".htaccess" || $file == ".users"){
 	} else {
 		$row_array['device'] = $file;
+                if(is_file($baseDir . "/" . "$dev" . "/" . $file)) {
                 $filesize = filesize($baseDir . "/" . $dev . "/" . $file);
-                $row_array['filesize'] = formatBytes($filesize);                
+                $row_array['filesize'] = formatBytes($filesize);
+                $path = "$dev" . "$device" . "/" . "$file";
+                $query = sprintf("SELECT * FROM md5sums WHERE filename= '$path'",
+                mysql_real_escape_string($downloads));
+                $result = mysql_query($query) or die(mysql_error());
+                $row = mysql_fetch_array($result);
+                $row_array['downloads'] = $row['downloads'];
+                }
                 array_push($return_arr,$row_array);
 	}
     }
