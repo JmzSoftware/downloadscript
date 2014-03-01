@@ -103,13 +103,15 @@ if (!$row) {
             $dlink  = $siteName . $baseDir . '' . $path;
             $server = parse_url($dlink, PHP_URL_HOST);
             $query6 = mysql_query("UPDATE md5sums SET downloads = downloads + 1 WHERE filename = '$fname'") or die(mysql_error());
-            header('Content-Type: application/octet-stream');
-            header("Content-Transfer-Encoding: binary");
-            header('Content-Disposition: attachment; filename=\"".$filename."\"');
-            header("Content-Length: " . filesize($baseDir . "/" . $path));
-            $fp = fopen($baseDir . "/" . $path, "r");
-            fpassthru($fp);
-            fclose($fp);
+            $file = $baseDir . "/" . $path;
+            $download_name = basename($file);
+            if (file_exists($file)) {
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename='.$download_name);
+                header('X-Sendfile: '.$file);
+                exit;
+}
+
         }
     }
 }
