@@ -1,7 +1,13 @@
 <?php
 require('config.php');
+// Sanitize input
+foreach(array_keys($_GET) as $key)
+{
+  $clean[$key] = mysql_real_escape_string($_GET[$key]);
+}
+
 // Get the filename given by directory linker
-$fileget = $_GET["file"];
+$fileget = $clean["file"];
 if (substr($fileget, 0, 1) == '/' || !isset($_GET['file']) || (substr($fileget, 0, 3) == '../')) {
     header('Location: http://www.' . $siteName);
 } else {
