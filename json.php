@@ -9,12 +9,17 @@ function formatBytes($size, $precision = 2)
     return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
 }
 
-if(isset($_GET['basedir'])) {
+foreach(array_keys($_GET) as $key)
+{
+    $clean[$key] = mysql_real_escape_string($_GET[$key]);	
+}
+
+if(isset($clean['basedir'])) {
 echo $baseDir;
 }
 
-if(isset($_GET['update'])) {
-$romname = $_GET['update'];
+if(isset($clean['update'])) {
+$romname = $clean['update'];
 $json = array();
 mysql_select_db("romupdate");
 $q=mysql_query("SELECT * FROM romupdate WHERE romname ='$romname' ORDER BY romver DESC");
@@ -30,7 +35,7 @@ print json_encode($json);
 mysql_close();
 }
 if(isset($_GET['md5'])) {
-$md5 = $_GET['md5'];
+$md5 = $clean['md5'];
 $query = sprintf("SELECT * FROM md5sums WHERE filename='$md5'",
 mysql_real_escape_string($file));
 $result = mysql_query($query) or die(mysql_error());
@@ -71,8 +76,8 @@ exit;
 }
 
 if(isset($_GET['device'])) {
-$device = $_GET['device'];
-$dev = $_GET['dev'];
+$device = $clean['device'];
+$dev = $clean['dev'];
 if(is_dir($baseDir . "/" . $dev . "/" . $device)){
 $row_array = array();
 $return_arr = array();
@@ -107,7 +112,7 @@ exit;
 
 
 if(isset($_GET['dev'])) {
-$dev = $_GET['dev'];
+$dev = $clean['dev'];
 if(is_dir($baseDir . "/" . $dev)){
 $row_array = array();
 $return_arr = array();
