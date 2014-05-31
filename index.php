@@ -22,10 +22,11 @@ require_once 'markdown.php';
 $users = array();
 $g     = scandir($baseDir);
 foreach ($g as $x) {
-    if (is_dir($x))
-        $users[$x] = scandir($x);
-    else
-        $users[] = $x;
+    if($x[0] <> '.')
+    	if (is_dir($x))
+        	$users[$x] = scandir($x);
+    	else
+        	$users[] = $x;
 }
 $currentFolder = NULL;
 $currentDevice = NULL;
