@@ -105,15 +105,13 @@ fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script
     $result = mysql_query($query) or die(mysql_error());
     $row       = mysql_fetch_array($result);
     $something = "files/" . $file;
-    if (!$row['md5']) {
-        $md5 = md5_file("$something");
-        $sqlread = mysql_query("INSERT INTO md5sums (filename,md5) VALUES(\"$file\",\"$md5\")") or die(mysql_error());
-        echo "MD5: " . $md5;
-    } else {
+    if ($row['md5']) {
         echo "MD5: " . $row['md5'];
     }
     echo "<br><br>";
-    echo "Downloads: " . $row['downloads'];
+    if ($row['downloads']) {
+        echo "Downloads: " . $row['downloads'];
+    }
     mysql_close();
 ?>
 
