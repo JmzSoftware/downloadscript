@@ -12,7 +12,7 @@ function readDirs($path){
       $query = sprintf("SELECT * FROM md5sums WHERE filename= '%s'", mysql_real_escape_string($newPath2));
       $result = mysql_query($query) or die(mysql_error());
       $row       = mysql_fetch_array($result);
-      if (!$row['md5']) {
+      if (!$row['filename']) {
         $md5 = md5_file($newPath);
         $sqlread = mysql_query("INSERT INTO md5sums (filename,md5) VALUES(\"$newPath2\",\"$md5\")") or die(mysql_error());
         echo "MD5 not found, creating it " . $newPath2 . "<br>";
