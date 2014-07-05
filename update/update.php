@@ -294,7 +294,7 @@ class AutoUpdate {
 
 		if ($this->removeTempDir) {
 			$this->log('Temporary directory `'.$this->tempDir.'` deleted.');
-			$this->_removeDir($this->tempDir);
+			//$this->_removeDir($this->tempDir);
 		}
 
 		$this->log('Update `'.$this->latestVersion.'` installed.');
