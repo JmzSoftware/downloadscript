@@ -263,7 +263,7 @@ class AutoUpdate {
 			$contents = zip_entry_read($file, zip_entry_filesize($file));
 
 			//Skip if entry is a directory
-			if (substr($filename, -1, 1) == '/')
+			if (substr($filename, -1, 1) == '/' || strstr($filename, "header.jpg"))
 				continue;
 
 			//Write to file
@@ -301,7 +301,8 @@ class AutoUpdate {
 
 		if ($this->removeTempDir) {
 			$this->log('Temporary directory `'.$this->tempDir.'` deleted.');
-			//$this->_removeDir($this->tempDir);
+			$this->_removeDir($this->tempDir);
+			unlink($this->installDir."default.config.php");
 		}
 
 		$this->log('Update `'.$this->latestVersion.'` installed.');
