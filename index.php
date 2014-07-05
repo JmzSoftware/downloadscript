@@ -2,7 +2,7 @@
 /*
  * Androtransfer.com Download Center
  * Copyright (C) 2012   Daniel Bateman
- * Copyright (C) 2013   James Taylor
+ * Copyright (C) 2013   Jmz Software LLC
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

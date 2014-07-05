@@ -2,7 +2,7 @@
 /*
  * Androtransfer.com Download Center
  * Copyright (C) 2012   Daniel Bateman
- * Copyright (C) 2013   James Taylor
+ * Copyright (C) 2013   Jmz Software LLC
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,8 +44,6 @@ if (get_magic_quotes_gpc()) {
     $id = $_GET['id'];
 }
 
-//  the filename, key, timestamp, and number of downloads from the database
-
 $query = sprintf("SELECT * FROM downloadkey WHERE uniqueid= '%s'", mysql_real_escape_string($id, $link));
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
@@ -69,7 +67,7 @@ if (!$row) {
                 echo "Invalid File or File Not Specified";
                 exit(0);
             }
-            
+
             function fetch($content, $start, $end)
             {
                 if ($content && $start && $end) {
@@ -81,19 +79,19 @@ if (!$row) {
                     return '';
                 }
             }
-            
+
             function fileExists($path)
             {
                 return (@fopen($path, "r") == true);
             }
-            
+
             $path      = $fname;
             $filename  = basename($path);
             $dir       = dirname($path);
             $blacklist = array(
                 'php'
             );
-            
+
             if (in_array($ext, $blacklist)) {
                 die($ext . " is not an allowed extension.");
             }
