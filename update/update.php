@@ -145,7 +145,7 @@ class AutoUpdate {
 	 *
 	 * @return string The latest version
 	 */
-	public function checkUpdate() {
+	public function checkUpdate($getURL) {
 		$this->log('Checking for a new update. . .');
 
 		$updateFile = $this->updateUrl.'/update.ini';
@@ -186,8 +186,11 @@ class AutoUpdate {
 				$this->latestVersion = $keyOld;
 				$this->latestVersionName = $latest;
 				$this->latestUpdate = $update;
-
-				return $keyOld;
+				if($getURL) {
+					return $update;
+				} else {
+					return $keyOld;
+				}
 			}
 			else {
 				$this->log('Unable to parse update file!');
@@ -207,7 +210,8 @@ class AutoUpdate {
 		$curl = curl_init();
                 curl_setopt($curl, CURLOPT_URL, $updateUrl);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_HEADER, false);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($curl, CURLOPT_HEADER, false);
                 $update = curl_exec($curl);
                 curl_close($curl);
 
@@ -240,9 +244,12 @@ class AutoUpdate {
 	 */
 	public function install($updateFile) {
 		$zip = zip_open($updateFile);
-
 		while ($file = zip_read($zip)) {
 			$filename = zip_entry_name($file);
+			if(strlen($filename) > 16 && strstr($filename, "downloadscript-2")) {
+        	                $filename = substr($filename, 16);
+	                }
+
 			$foldername = $this->installDir.dirname($filename);
 
 			$this->log('Updating `'.$filename.'`!');
@@ -308,7 +315,7 @@ class AutoUpdate {
 	public function update() {
 		//Check for latest version
 		if ((is_null($this->latestVersion)) or (is_null($this->latestUpdate))) {
-			$this->checkUpdate();
+			$this->checkUpdate(false);
 		}
 
 		if ((is_null($this->latestVersion)) or (is_null($this->latestUpdate))) {
@@ -334,8 +341,8 @@ class AutoUpdate {
 			}
 
 			$updateFile = $this->tempDir.'/'.$this->latestVersion.'.zip';
-			$updateUrl = $this->updateUrl.'/'.$this->latestVersion.'.zip';
-
+			$updateUrl = $this->checkUpdate(true);
+			echo $updateUrl;
 			//Download update
 			if (!is_file($updateFile)) {
 				if (!$this->downloadUpdate($updateUrl, $updateFile)) {

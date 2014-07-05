@@ -14,7 +14,7 @@ $update->currentVersion = 1;
  */
 $update->updateUrl = 'http://jmzsoftware.com/updates';
 
-$latest = $update->checkUpdate();
+$latest = $update->checkUpdate(false);
 
 if ($latest !== false) {
     if ($latest > $update->currentVersion) {
