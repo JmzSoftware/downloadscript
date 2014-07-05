@@ -47,7 +47,7 @@ class AutoUpdate {
 	/*
 	 * Url to the update folder on the server
 	 */
-	public $updateUrl = 'http://www.jmzsoftware.com';
+	public $updateUrl = 'http://www.jmzsoftware.com/updates';
 
 	/*
 	 * Version filename on the server
@@ -204,7 +204,6 @@ class AutoUpdate {
 	 */
 	public function downloadUpdate($updateUrl, $updateFile) {
 		$this->log('Downloading update...');
-
 		$curl = curl_init();
                 curl_setopt($curl, CURLOPT_URL, $updateUrl);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -261,10 +260,12 @@ class AutoUpdate {
 				continue;
 
 			//Write to file
+			if (file_exists($this->installDir.$filename)) {
 			if (!is_writable($this->installDir.$filename)) {
 				$this->log('Could not update `'.$this->installDir.$filename.'`, not writeable!');
 				return false;
 			}
+  			}
 
 			$updateHandle = @fopen($this->installDir.$filename, 'w');
 
@@ -293,7 +294,7 @@ class AutoUpdate {
 
 		if ($this->removeTempDir) {
 			$this->log('Temporary directory `'.$this->tempDir.'` deleted.');
-			$this->_removeDir($this->tempDir);
+			//$this->_removeDir($this->tempDir);
 		}
 
 		$this->log('Update `'.$this->latestVersion.'` installed.');
