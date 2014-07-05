@@ -7,7 +7,7 @@ require('update.php');
 
 $update = new AutoUpdate(true); //Enable logging
 
-$update->currentVersion = 1;
+$update->currentVersion = 2;
 
 /*
  * In this example the folder 'updateUrl' includes 3 files, 0.1.zip, 0.2.zip and update.ini
